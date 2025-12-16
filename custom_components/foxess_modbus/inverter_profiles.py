@@ -446,7 +446,16 @@ _INVERTER_PROFILES_LIST = [
         RegisterType.HOLDING,
         versions={None: Inv.H3_SMART},
         special_registers=H3_SMART_REGISTERS,
+    ),   
+    # --- EVO 10-x-H (Fox ESS EVO series) ---
+    InverterModelProfile(InverterModel.EVO_10_H, r"^EVO 10-(\d+(?:\.\d+)?)-H$").add_connection_type(
+        ConnectionType.AUX,
+        RegisterType.HOLDING,
+        versions={None: Inv.H3_180},
+        special_registers=H3_REGISTERS,
     ),
+
+
 ]
 
 INVERTER_PROFILES = {x.model: x for x in _INVERTER_PROFILES_LIST}
