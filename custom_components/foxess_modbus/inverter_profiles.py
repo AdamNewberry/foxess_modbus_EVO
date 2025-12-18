@@ -448,11 +448,14 @@ _INVERTER_PROFILES_LIST = [
         special_registers=H3_SMART_REGISTERS,
     ),   
     # --- EVO 10-x-H (Fox ESS EVO series) ---
-    InverterModelProfile(InverterModel.EVO_10_H, r"^EVO 10-(\d+(?:\.\d+)?)-H$").add_connection_type(
-        ConnectionType.AUX,
-        RegisterType.HOLDING,
-        versions={None: Inv.H3_180},
-        special_registers=H3_REGISTERS,
+    InverterModelProfile(
+    InverterModel.EVO_10_H, r"^EVO ?10-(\d+(?:\.\d+)?)-H$",  # Flexible regex for model string
+    capacity_parser=CapacityParser.H1  # 8kW capacity
+    ).add_connection_type(
+    ConnectionType.AUX,
+    RegisterType.INPUT,  # Change to INPUT for RS485/AUX
+    versions={None: Inv.H1_G1},  # Use H1_G1 map initially
+    special_registers=H1_AC1_REGISTERS,  # Or H1_G2_REGISTERS if testing shows better fit
     ),
 
 
