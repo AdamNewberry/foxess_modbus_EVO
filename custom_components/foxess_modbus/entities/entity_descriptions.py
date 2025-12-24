@@ -1413,7 +1413,7 @@ def _inverter_entities() -> Iterable[EntityFactory]:
             ModbusAddressesSpec(
                 holding=[31021], models=Inv.H1_G1 | Inv.H1_LAN | Inv.H1_G2_SET | Inv.KH_PRE133 | Inv.KH_133
             ),
-            
+
         ],
     )
 
@@ -2104,7 +2104,7 @@ def _inverter_entities() -> Iterable[EntityFactory]:
         return ModbusSensorDescription(
             key="total_yield_total",
             addresses=addresses,
-            name="Yield Total",
+            name="Output Energy Total",
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL,
             native_unit_of_measurement="kWh",
@@ -2136,7 +2136,7 @@ def _inverter_entities() -> Iterable[EntityFactory]:
         return ModbusSensorDescription(
             key="total_yield_today",
             addresses=addresses,
-            name="Yield Today",
+            name="Output Energy Today",
             device_class=SensorDeviceClass.ENERGY,
             state_class=SensorStateClass.TOTAL_INCREASING,
             native_unit_of_measurement="kWh",
