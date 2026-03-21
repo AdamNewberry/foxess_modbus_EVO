@@ -96,7 +96,7 @@ class EntitySpec(InverterModelSpec):
     def address_type_map_for_inverter_model(self, models: Inv) -> dict[RegisterType, list[int] | None]:
         if models not in self._models:
             return {}
-        return {x: None for x in self._register_types}
+        return dict.fromkeys(self._register_types)
 
     def addresses_for_inverter_model(self, register_type: RegisterType, models: Inv) -> list[int] | None:
         return [] if register_type in self._register_types and models in self._models else None

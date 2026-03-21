@@ -271,7 +271,7 @@ class AdapterFlowSegment:
 
         try:
             if protocol in [TCP, UDP, RTU_OVER_TCP]:
-                params = {"host": host.split(":")[0], "port": int(host.split(":")[1])}
+                params = {"host": host.split(":", maxsplit=1)[0], "port": int(host.split(":")[1])}
             elif protocol == SERIAL:
                 params = {"port": host, "baudrate": 9600}
             else:

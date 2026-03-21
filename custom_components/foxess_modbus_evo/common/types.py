@@ -1,4 +1,4 @@
-"""Defines RegisterType"""  # noqa: A005
+"""Defines RegisterType"""
 
 from enum import Enum
 from enum import Flag

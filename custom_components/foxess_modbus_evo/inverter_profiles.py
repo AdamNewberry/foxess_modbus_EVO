@@ -460,7 +460,6 @@ _INVERTER_PROFILES_LIST = [
             individual_read_register_ranges=(),
         ),
     ),
-
 ]
 
 INVERTER_PROFILES = {x.model: x for x in _INVERTER_PROFILES_LIST}
