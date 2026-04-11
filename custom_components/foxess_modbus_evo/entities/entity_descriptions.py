@@ -2566,7 +2566,21 @@ def _configuration_entities() -> Iterable[EntityFactory]:
     yield ModbusWorkModeSelectDescription(
         key="work_mode",
         address=[
-            ModbusAddressSpec(holding=41000, models=Inv.H1_G2_SET | Inv.H3_SET & ~Inv.AIO_H3_PRE101 | Inv.EVO_10_H),
+            ModbusAddressSpec(holding=49203, models=Inv.EVO_10_H),
+        ],
+        name="Work Mode",
+        options_map={
+            0: "Self Use",
+            1: "Feed-in First",
+            2: "Back-up",
+            3: "Peak Shaving",
+        },
+    )
+
+    yield ModbusWorkModeSelectDescription(
+        key="work_mode",
+        address=[
+            ModbusAddressSpec(holding=41000, models=Inv.H1_G2_SET | Inv.H3_SET & ~Inv.AIO_H3_PRE101),
         ],
         name="Work Mode",
         options_map={0: "Self Use", 1: "Feed-in First", 2: "Back-up", 4: "Peak Shaving"},

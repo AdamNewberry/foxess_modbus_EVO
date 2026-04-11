@@ -133,7 +133,7 @@ REMOTE_CONTROL_DESCRIPTION = ModbusRemoteControlFactory(
                 remote_enable=46001,
                 timeout_set=46002,
                 active_power=[46004, 46003],
-                work_mode=41000,
+                work_mode=49203,
                 work_mode_map={
                     WorkMode.SELF_USE: 0,
                     WorkMode.FEED_IN_FIRST: 1,
