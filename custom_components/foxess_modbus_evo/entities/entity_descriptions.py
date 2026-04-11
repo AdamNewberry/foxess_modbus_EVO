@@ -2574,6 +2574,7 @@ def _configuration_entities() -> Iterable[EntityFactory]:
             3: "Feed-in First",
             4: "Back-up",
             5: "Peak Shaving",
+            255: "Remote Control",
         },
     )
 
