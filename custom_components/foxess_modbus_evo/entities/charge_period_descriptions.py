@@ -30,10 +30,10 @@ CHARGE_PERIODS = [
             ),
             ChargePeriodAddressSpec(
                 holding=ModbusChargePeriodAddressConfig(
-                    period_start_address=48021,
-                    period_end_address=48022,
-                    enable_charge_from_grid_address=48020,
-                    mode_address=48023,
+                    period_start_address=48011,
+                    period_end_address=48012,
+                    enable_charge_from_grid_address=48010,
+                    mode_address=48013,
                 ),
                 models=Inv.EVO_10_H,
             ),
@@ -67,10 +67,10 @@ CHARGE_PERIODS = [
             ),
             ChargePeriodAddressSpec(
                 holding=ModbusChargePeriodAddressConfig(
-                    period_start_address=48011,
-                    period_end_address=48012,
-                    enable_charge_from_grid_address=48010,
-                    mode_address=48013,
+                    period_start_address=48021,
+                    period_end_address=48022,
+                    enable_charge_from_grid_address=48020,
+                    mode_address=48023,
                 ),
                 models=Inv.EVO_10_H,
             ),
