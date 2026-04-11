@@ -154,10 +154,18 @@ class ModbusRemoteControlFactory:
         )
 
         # Models without a work_mode address get one of these
+        # Models with a work_mode address also get one (they have a separate work mode select) with a different key
         remote_control_select = ModbusRemoteControlSelectDescription(
             key="force_charge_mode",
             name="Force Charge Mode",
             models=[x.get_models_without_work_mode() for x in self.address_specs],
+        )
+        remote_control_select_with_work_mode = ModbusRemoteControlSelectDescription(
+            key="remote_control",
+            name="Remote Control",
+            models=[x.get_all_models() for x in self.address_specs if any(
+                v.work_mode is not None for v in x.register_types.values()
+            )],
         )
 
         def _set_max_soc(manager: EntityRemoteControlManager, value: int) -> None:
@@ -183,6 +191,7 @@ class ModbusRemoteControlFactory:
             charge_power,
             discharge_power,
             remote_control_select,
+            remote_control_select_with_work_mode,
             force_charge_max_soc,
         ]
 
