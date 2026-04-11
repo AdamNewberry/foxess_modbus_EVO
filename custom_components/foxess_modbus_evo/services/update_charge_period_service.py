@@ -231,42 +231,48 @@ async def _set_charge_periods(controller: ModbusController, charge_periods: list
     # (One charge period can contain another, or starts/ends can overlap).
     # Mirror this for consistancy, even though it is a little odd.
 
-    # List of (address, value)
-    writes: list[tuple[int, int]] = []
+    # Write registers per slot (each slot's registers are contiguous but slots may not be)
     for charge_period, config in zip(charge_periods, controller.charge_periods, strict=True):
-        writes.append(
+        slot_writes: list[tuple[int, int]] = []
+        slot_writes.append(
             (
                 config.addresses.period_start_address,
                 serialize_time_to_value(charge_period.start) if charge_period.enable_force_charge else 0,
             )
         )
-        writes.append(
+        slot_writes.append(
             (
                 config.addresses.period_end_address,
                 serialize_time_to_value(charge_period.end) if charge_period.enable_force_charge else 0,
             )
         )
-        writes.append(
+        slot_writes.append(
             (
                 config.addresses.enable_charge_from_grid_address,
                 1 if charge_period.enable_charge_from_grid else 0,
             )
         )
+        if config.addresses.mode_address is not None:
+            mode_value = (
+                config.addresses.mode_charge_value
+                if charge_period.enable_charge_from_grid
+                else config.addresses.mode_no_charge_value
+            )
+            slot_writes.append((config.addresses.mode_address, mode_value))
 
-    # We expect all of the writes to have a contiguous set of addresses
-    write_values: list[int] = [None] * len(writes)  # type: ignore
-    write_start_address = min(write[0] for write in writes)
+        write_start_address = min(write[0] for write in slot_writes)
+        write_values: list[int] = [None] * len(slot_writes)  # type: ignore
 
-    for address, value in writes:
-        i = address - write_start_address
-        assert i < len(write_values)
-        assert write_values[i] is None
-        write_values[i] = value
+        for address, value in slot_writes:
+            i = address - write_start_address
+            assert i < len(write_values)
+            assert write_values[i] is None
+            write_values[i] = value
 
-    assert not any(x for x in write_values if x is None)
+        assert not any(x for x in write_values if x is None)
 
-    try:
-        await controller.write_registers(write_start_address, write_values)
-    except ModbusIOException as ex:
-        _LOGGER.warning(ex, exc_info=True)
-        raise HomeAssistantError() from ex
+        try:
+            await controller.write_registers(write_start_address, write_values)
+        except ModbusIOException as ex:
+            _LOGGER.warning(ex, exc_info=True)
+            raise HomeAssistantError() from ex

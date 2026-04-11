@@ -31,6 +31,9 @@ class ModbusChargePeriodAddressConfig:
     period_start_address: int
     period_end_address: int
     enable_charge_from_grid_address: int
+    mode_address: int | None = None
+    mode_charge_value: int = 6
+    mode_no_charge_value: int = 1
 
 
 @dataclass(frozen=True)
