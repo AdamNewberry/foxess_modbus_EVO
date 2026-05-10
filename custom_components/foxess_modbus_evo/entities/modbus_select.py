@@ -29,6 +29,7 @@ class ModbusSelectDescription(SelectEntityDescription, EntityFactory):  # type: 
 
     address: list[ModbusAddressSpec]
     options_map: dict[int, str]
+    write_map: dict[str, int] | None = None  # Separate write values when read/write registers differ
     validate: list[BaseValidator] = field(default_factory=list)
 
     @property
@@ -73,7 +74,11 @@ class ModbusSelect(ModbusEntityMixin, SelectEntity):
         self.entity_description = entity_description
         self._address = address
         self.entity_id = self._get_entity_id(Platform.SELECT)
-        self._attr_options = list(self.entity_description.options_map.values())
+        if entity_description.write_map is not None:
+            self._attr_options = list(entity_description.write_map.keys())
+        else:
+            seen: set[str] = set()
+            self._attr_options = [v for v in entity_description.options_map.values() if not (v in seen or seen.add(v))]  # type: ignore[func-returns-value]
 
     @property
     def current_option(self) -> str | None:
@@ -96,10 +101,16 @@ class ModbusSelect(ModbusEntityMixin, SelectEntity):
 
     async def async_select_option(self, option: str) -> None:
         entity_description = cast(ModbusSelectDescription, self.entity_description)
-        value = next(
-            (k for k, v in entity_description.options_map.items() if v == option),
-            None,
-        )
+        if entity_description.write_map is not None:
+            value = entity_description.write_map.get(option)
+            # Cache the expected read-back value so the UI shows the correct state immediately
+            cache_as = next((k for k, v in entity_description.options_map.items() if v == option), value)
+        else:
+            value = next(
+                (k for k, v in entity_description.options_map.items() if v == option),
+                None,
+            )
+            cache_as = value
         if value is None:
             _LOGGER.warning(
                 "Failed to write unknown value '%s' to register '%s' with address %s. Valid values: %s",
@@ -110,7 +121,7 @@ class ModbusSelect(ModbusEntityMixin, SelectEntity):
             )
             return
 
-        await self._controller.write_register(self._address, value)
+        await self._controller.write_register(self._address, value, cache_as=cache_as)
 
     @property
     def addresses(self) -> list[int]:

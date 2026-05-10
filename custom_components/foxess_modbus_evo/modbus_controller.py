@@ -238,11 +238,11 @@ class ModbusController(EntityController, UnloadController):
         """Read one of more registers, used by the read_registers_service"""
         return await self._client.read_registers(start_address, num_registers, register_type, self._slave)
 
-    async def write_register(self, address: int, value: int) -> None:
-        await self.write_registers(address, [value])
+    async def write_register(self, address: int, value: int, *, cache_as: int | None = None) -> None:
+        await self.write_registers(address, [value], cache_as=[cache_as if cache_as is not None else value])
 
-    async def write_registers(self, start_address: int, values: list[int]) -> None:
-        """Write multiple registers"""
+    async def write_registers(self, start_address: int, values: list[int], *, cache_as: list[int] | None = None) -> None:
+        """Write multiple registers. cache_as overrides the values stored in the read cache (one per register)."""
         _LOGGER.debug(
             "Writing registers for %s %s: (%s, %s)",
             self._client,
@@ -268,7 +268,7 @@ class ModbusController(EntityController, UnloadController):
                 # Only store the result of the write if it's a register we care about ourselves
                 register_value = self._data.get(address)
                 if register_value is not None:
-                    register_value.written_value = value
+                    register_value.written_value = cache_as[i] if cache_as is not None else value
                     register_value.written_at = time.monotonic()
                     changed_addresses.add(address)
             if len(changed_addresses) > 0:

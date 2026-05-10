@@ -135,9 +135,9 @@ REMOTE_CONTROL_DESCRIPTION = ModbusRemoteControlFactory(
                 active_power=[46004, 46003],
                 work_mode=49203,
                 work_mode_map={
-                    WorkMode.SELF_USE: 2,
-                    WorkMode.FEED_IN_FIRST: 3,
-                    WorkMode.BACK_UP: 4,
+                    WorkMode.SELF_USE: 0,      # write 0 -> reads 1 (Self Use)
+                    WorkMode.FEED_IN_FIRST: 1, # write 1 -> reads 2 (Feed-in First)
+                    WorkMode.BACK_UP: 2,       # write 2 -> reads 3 (Back-up)
                 },
                 max_soc=46610,
                 invbatpower=[39238, 39237],

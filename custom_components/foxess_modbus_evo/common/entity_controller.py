@@ -123,8 +123,8 @@ class EntityController(ABC):
         """Removes a modbus entity from the ModbusController"""
 
     @abstractmethod
-    async def write_register(self, address: int, value: int) -> None:
-        """Write a single value to a register"""
+    async def write_register(self, address: int, value: int, *, cache_as: int | None = None) -> None:
+        """Write a single value to a register. cache_as overrides the value stored in the read cache."""
 
     @abstractmethod
     async def write_registers(self, start_address: int, values: list[int]) -> None:
