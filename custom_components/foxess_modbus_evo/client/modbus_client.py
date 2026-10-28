@@ -89,7 +89,7 @@ class ModbusClient:
         # This ties into the call to serial.protocol_handler_packages.append above, and means that pyserial will find
         # our protocol_pollserial module, and the Serial class inside, when we use the prefix pollserial://
         if protocol == SERIAL and os.name == "posix":
-            config["port"] = f"pollserial://{config['port']}"
+            pass # disabled pollserial for Python 3.14 compatibility
 
         # Some serial devices need a short delay after polling. Also do this for the inverter, just
         # in case it helps.
